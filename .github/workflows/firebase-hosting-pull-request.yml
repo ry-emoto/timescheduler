@@ -21,5 +21,5 @@ jobs:
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
-          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_REACT_TODO3_28DFD }}"
-          projectId: react-todo3-28dfd
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_TIMESCHEDULER_PRO }}"
+          projectId: timescheduler-pro
