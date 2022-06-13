@@ -4,7 +4,7 @@ import { Box, Button, Card,  FormControl, IconButton, MenuItem, Select, Stack, T
 import DeleteIcon from '@mui/icons-material/Delete';
 import { format } from 'date-fns';
 import { useRecoilValue } from 'recoil';
-import { selectDateState, timeTaskState, todoTaskState } from '../../../recoil/atoms';
+import { selectDateState, signInUserState, timeTaskState, todoTaskState } from '../../../recoil/atoms';
 
 const DispTime = () => {
   // --------------------
@@ -20,6 +20,8 @@ const DispTime = () => {
   // 選択した日付を取得→フォーマット
   const selectDate = useRecoilValue(selectDateState);
   const formatSelectDate = format(selectDate,"yyyyMMdd");
+  // ログインユーザー情報取得
+  const signInUser = useRecoilValue(signInUserState);
 
   // --------------------
   // 処理
@@ -27,9 +29,10 @@ const DispTime = () => {
   // トリガー：追加ボタン押下時
   // 処理：db（timeTasks）に登録
   const addTodo = async (hour) => {
-    const usersCollectionRef = collection(db, 'timeTasks');
-    await addDoc(usersCollectionRef, {
+    const tasksRef = collection(db, 'timeTasks');
+    await addDoc(tasksRef, {
       title: "",
+      uid: signInUser.uid,
       createAt: serverTimestamp(),
       day: formatSelectDate,
       hour : hour,
@@ -38,8 +41,8 @@ const DispTime = () => {
   // トリガー：ゴミ箱ボタン押下時
   // 処理：db（timeTasks）を削除
   const delTodo = async (taskId) => {
-    const usersCollectionRef = doc(db, 'timeTasks', taskId);
-    await deleteDoc(usersCollectionRef);
+    const tasksRef = doc(db, 'timeTasks', taskId);
+    await deleteDoc(tasksRef);
   }
   // トリガー：初回
   // 処理：db（timeTasks）を取得
@@ -47,8 +50,8 @@ const DispTime = () => {
     updateTodo(id, event.target.value);
   };
   const updateTodo = async (id, title) => {
-    const usersCollectionRef = doc(db, 'timeTasks', id);
-    await updateDoc(usersCollectionRef, {
+    const tasksRef = doc(db, 'timeTasks', id);
+    await updateDoc(tasksRef, {
       title: title,
     });
   }

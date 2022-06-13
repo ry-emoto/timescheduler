@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react'
 import { db } from '../../service/firebase';
-import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
-import { useSetRecoilState } from 'recoil';
-import { todoTaskState } from '../../recoil/atoms';
+import { collection, onSnapshot, orderBy, query, where } from 'firebase/firestore';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { signInUserState, todoTaskState } from '../../recoil/atoms';
 import { Stack, Typography } from '@mui/material';
 import CreateTodo from '../molecules/todos/CreateTodo';
 import DispTodo from '../molecules/todos/DispTodo';
@@ -13,6 +13,8 @@ const TodoList = () => {
   // --------------------
   // todo表示用の格納（リコイル）
   const setTodoTaskState = useSetRecoilState(todoTaskState);
+  // ログインユーザー情報取得
+  const signInUser = useRecoilValue(signInUserState);
 
   // --------------------
   // 処理
@@ -21,7 +23,7 @@ const TodoList = () => {
   // 処理：db（todoTasks）を取得
   useEffect(() => {
     const tasksRef = collection(db, 'todoTasks');
-    const q = query(tasksRef, orderBy('title',"asc"));
+    const q = query(tasksRef, orderBy('title',"asc"), where("uid", "==", signInUser.uid));
     const unSub = onSnapshot(q, (snapshot) => {
       setTodoTaskState(
         snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
