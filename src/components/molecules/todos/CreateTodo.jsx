@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { db } from '../../../service/firebase'
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { Button, FormControl, Stack, TextField } from '@mui/material';
+import { useRecoilValue } from 'recoil';
+import { signInUserState } from '../../../recoil/atoms';
 
 const CreateTodo = () => {
   // --------------------
@@ -9,6 +11,8 @@ const CreateTodo = () => {
   // --------------------
   // todoの入力値を格納
   const [inputTitle, setInputTitle] = useState("")
+  // ログインユーザー情報取得
+  const signInUser = useRecoilValue(signInUserState);
 
   // --------------------
   // 処理
@@ -16,9 +20,10 @@ const CreateTodo = () => {
   // トリガー：todo入力時
   // 処理：入力値をdb（todoTasks）に格納
   const dbAdd = async () => {
-    const usersCollectionRef = collection(db, 'todoTasks');
-    await addDoc(usersCollectionRef, {
+    const tasksRef = collection(db, 'todoTasks');
+    await addDoc(tasksRef, {
       title: inputTitle,
+      uid: signInUser.uid,
       createAt: serverTimestamp(),
       completed: false,
       deleted: false,

@@ -11,14 +11,14 @@ const TodoTab = (props) => {
   // トリガー：ゴミ箱アイコンクリック
   // 処理：db（todoTasks）更新
   const dbUpdateDelete = async (task) => {
-    const usersCollectionRef = doc(db, 'todoTasks', task.id);
-    await updateDoc(usersCollectionRef, { deleted: !task.deleted });
+    const tasksRef = doc(db, 'todoTasks', task.id);
+    await updateDoc(tasksRef, { deleted: !task.deleted });
   }
   // トリガー：チェックアイコンクリック
   // 処理：db（todoTasks）更新
   const dbUpdateComplete = async (task) => {
-    const usersCollectionRef = doc(db, 'todoTasks', task.id);
-    await updateDoc(usersCollectionRef, { completed: !task.completed });
+    const tasksRef = doc(db, 'todoTasks', task.id);
+    await updateDoc(tasksRef, { completed: !task.completed });
   }
 
   return (
