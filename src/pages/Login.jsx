@@ -25,9 +25,12 @@ const Login = () => {
   };
   // ゲストログイン
   const guestLogin = async () => {
-    setEmail( "guest@example.com" );
-    setIsLogin( "password" );
-    login();
+    try {
+      await signInWithEmailAndPassword(auth, "guest@example.com", "password");
+      navigate("/");
+    } catch (error) {
+      alert(error.message);
+    }
   }
   // 通常ログイン
   const login = async () => {
